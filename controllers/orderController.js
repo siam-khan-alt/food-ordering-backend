@@ -82,5 +82,20 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).send({ message: "Failed to update order status" });
   }
 };
+const getSingleOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId)
+      .populate('items.foodItem', 'name price');
 
-module.exports = { createOrder, getMyOrders, getAllOrders, updateOrderStatus };
+    if (!order) {
+      return res.status(404).send({ message: "Order not found" });
+    }
+
+    res.status(200).send(order);
+  } catch (error) {
+    res.status(500).send({ message: "Failed to fetch order" });
+  }
+};
+
+module.exports = { createOrder, getMyOrders, getAllOrders, updateOrderStatus, getSingleOrder };

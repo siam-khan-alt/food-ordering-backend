@@ -22,4 +22,35 @@ const getAllFoodItems = async (req, res) => {
   }
 };
 
-module.exports = { addFoodItem, getAllFoodItems };
+const updateFoodItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedFood = await FoodItem.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!updatedFood) {
+      return res.status(404).send({ message: "Food item not found" });
+    }
+
+    res.status(200).send({ message: "Food item updated", food: updatedFood });
+  } catch (error) {
+    res.status(500).send({ message: "Failed to update food item" });
+  }
+};
+
+const deleteFoodItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedFood = await FoodItem.findByIdAndDelete(id);
+
+    if (!deletedFood) {
+      return res.status(404).send({ message: "Food item not found" });
+    }
+
+    res.status(200).send({ message: "Food item deleted" });
+  } catch (error) {
+    res.status(500).send({ message: "Failed to delete food item" });
+  }
+};
+
+
+module.exports = { addFoodItem, getAllFoodItems, updateFoodItem, deleteFoodItem };
