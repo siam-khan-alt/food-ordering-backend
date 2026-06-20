@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const User = require('../models/User');
 const FoodItem = require('../models/FoodItem');
 
 const createOrder = async (req, res) => {
@@ -98,4 +99,33 @@ const getSingleOrder = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getMyOrders, getAllOrders, updateOrderStatus, getSingleOrder };
+
+const getCustomerOrders = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const orders = await Order.find({ customer: customerId })
+      .populate('items.foodItem', 'name price')
+      .sort({ createdAt: -1 });
+
+    const customer = await User.findById(customerId).select('name email createdAt');
+
+    if (!customer) {
+      return res.status(404).send({ message: "Customer not found" });
+    }
+
+    const totalSpent = orders
+      .filter((o) => o.paymentStatus === 'paid')
+      .reduce((sum, o) => sum + o.totalAmount, 0);
+
+    res.status(200).send({
+      customer,
+      orders,
+      totalOrders: orders.length,
+      totalSpent
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Failed to fetch customer details" });
+  }
+};
+
+module.exports = { createOrder, getMyOrders, getAllOrders, updateOrderStatus, getSingleOrder, getCustomerOrders };

@@ -26,7 +26,7 @@ const generateHash = (req, res) => {
     )
     .digest('hex')
     .toUpperCase();
-
+console.log("Hash Debug:", { merchantId, hash, orderId, amountFormatted, currency });
   res.status(200).send({
     merchantId,
     hash,
