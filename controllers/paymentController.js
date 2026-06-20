@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const Order = require('../models/Order');
 
 const generateHash = (req, res) => {
-  const { orderId, amount } = req.body;
+  const { orderId, amount, currency = 'LKR' } = req.body;
 
   const merchantId = process.env.PAYHERE_MERCHANT_ID;
   const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
@@ -13,9 +13,7 @@ const generateHash = (req, res) => {
     .digest('hex')
     .toUpperCase();
 
-  const amountFormatted = parseFloat(amount).toLocaleString('en-us', {
-    minimumFractionDigits: 2
-  }).replaceAll(',', '');
+  const amountFormatted = parseFloat(amount).toFixed(2);
 
   const hash = crypto
     .createHash('md5')
@@ -23,7 +21,7 @@ const generateHash = (req, res) => {
       merchantId +
       orderId +
       amountFormatted +
-      'LKR' +
+      currency +
       hashedSecret
     )
     .digest('hex')
@@ -33,7 +31,8 @@ const generateHash = (req, res) => {
     merchantId,
     hash,
     orderId,
-    amount: amountFormatted
+    amount: amountFormatted,
+    currency
   });
 };
 
