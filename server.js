@@ -25,6 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.get('/', (req, res) => {
   res.send('Food Ordering API is running');
 });
+module.exports = app;
 
   // app.listen(PORT, () => {
   //   console.log(`Server running on port ${PORT}`);
