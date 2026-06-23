@@ -26,6 +26,6 @@ app.get('/', (req, res) => {
   res.send('Food Ordering API is running');
 });
 
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+  // app.listen(PORT, () => {
+  //   console.log(`Server running on port ${PORT}`);
+  // });
