@@ -27,6 +27,6 @@ app.get('/', (req, res) => {
 });
 module.exports = app;
 
-  // app.listen(PORT, () => {
-  //   console.log(`Server running on port ${PORT}`);
-  // });
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
